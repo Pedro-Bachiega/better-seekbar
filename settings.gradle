@@ -1,0 +1,3 @@
+include ':bar'
+include ':app'
+rootProject.name = "CurvedSeekBar"

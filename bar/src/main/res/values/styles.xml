@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BezierSeekBar">
+        <item name="barStrokeSize">@dimen/default_bar_stroke_size</item>
+        <item name="handlerSize">@dimen/default_handler_size</item>
+
+        <item name="handlerMarginStart">@dimen/default_handler_horizontal_margin</item>
+        <item name="handlerMarginEnd">@dimen/default_handler_horizontal_margin</item>
+
+        <item name="barColor">?attr/colorPrimary</item>
+        <item name="handlerColor">?attr/colorAccent</item>
+
+        <item name="android:paddingTop">@dimen/default_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/default_vertical_padding</item>
+    </style>
+
+</resources>

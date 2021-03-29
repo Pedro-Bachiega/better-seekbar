@@ -1,0 +1,20 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+    defaultConfig {
+        applicationId "com.pedrobneto.curvedseekbar"
+    }
+}
+
+dependencies {
+    implementation project(":bar")
+
+    implementation dependency_versions.appCompat
+    implementation dependency_versions.constraintLayout
+    implementation dependency_versions.coreKtx
+    implementation dependency_versions.kotlin
+    implementation dependency_versions.materialComponents
+}

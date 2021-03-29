@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    tools:context=".SampleActivity">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.pedrobneto.bar.CurvedSeekBar
+        android:id="@+id/seek_bar"
+        style="@style/BezierSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="146dp"
+        app:barColor="#FFCE2E"
+        app:highlightColor="#FFC700"
+        app:handlerColor="#FFFFFF"
+        app:segments="3"
+        app:anchorX1="47.5"
+        app:anchorX2="204.5"
+        app:anchorY1="15.5"
+        app:anchorY2="95.5"
+        app:finalX="392.5"
+        app:finalY="101.6"
+        app:maxHighlightAlpha="0.3"
+        app:graphMarginTop="36dp"
+        app:segmentDivider="0.5dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/top_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:text="Points: 5" />
+
+    <TextView
+        android:id="@+id/bottom_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center_horizontal"
+        android:text="Selected point: 1"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

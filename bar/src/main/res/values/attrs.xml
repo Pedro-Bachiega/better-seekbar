@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CurvedSeekBar">
+        <!--region Progress-->
+        <attr name="initialProgress" format="float" />
+        <!--endregion-->
+
+        <!--region Points-->
+        <attr name="anchorX1" format="float" />
+        <attr name="anchorX2" format="float" />
+        <attr name="anchorY1" format="float" />
+        <attr name="anchorY2" format="float" />
+        <attr name="finalY" format="float" />
+        <attr name="finalX" format="float" />
+        <!--endregion-->
+
+        <!--region Graph's margins-->
+        <attr name="graphMarginTop" format="dimension" />
+        <!--endregion-->
+
+        <!--region Segments-->
+        <attr name="segments" format="integer" />
+        <attr name="segmentResource" format="reference" />
+        <attr name="segmentDivider" format="dimension" />
+        <!--endregion-->
+
+        <!--region Bar-->
+        <attr name="barStrokeSize" format="dimension" />
+        <attr name="barColor" format="color" />
+        <!--endregion-->
+
+        <!--region Highlight-->
+        <attr name="minHighlightAlpha" format="float" />
+        <attr name="maxHighlightAlpha" format="float" />
+        <attr name="highlightColor" format="color" />
+        <!--endregion-->
+
+        <!--region Handler-->
+        <attr name="handlerSize" format="dimension" />
+        <attr name="handlerMarginStart" format="dimension" />
+        <attr name="handlerMarginEnd" format="dimension" />
+        <attr name="handlerColor" format="color" />
+        <attr name="handlerResource" format="reference" />
+        <!--endregion-->
+    </declare-styleable>
+</resources>

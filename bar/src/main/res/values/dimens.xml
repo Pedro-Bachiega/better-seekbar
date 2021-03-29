@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_vertical_padding">16dp</dimen>
+    <dimen name="default_handler_horizontal_margin">8dp</dimen>
+    <dimen name="default_drag_elevation">8dp</dimen>
+    <dimen name="default_handler_elevation">4dp</dimen>
+    <dimen name="default_bar_stroke_size">4dp</dimen>
+    <dimen name="default_highlight_stroke_size">1dp</dimen>
+    <dimen name="default_handler_size">32dp</dimen>
+    <dimen name="default_graph_offset">36dp</dimen>
+</resources>
