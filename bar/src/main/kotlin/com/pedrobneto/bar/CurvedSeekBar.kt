@@ -569,6 +569,7 @@ class CurvedSeekBar : FrameLayout {
     private fun setupHandler() {
         val drawable = ContextCompat.getDrawable(context, handlerResource)
         drawable?.setTint(handlerColor)
+        handlerView.id = R.id.curved_seekbar_handler
         handlerView.elevation = resources.getDimension(R.dimen.default_handler_elevation)
         handlerView.background = drawable
         handlerView.layoutParams = LayoutParams(handlerSize, handlerSize)
