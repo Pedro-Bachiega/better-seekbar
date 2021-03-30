@@ -583,7 +583,10 @@ class CurvedSeekBar : FrameLayout {
             .setMarginEnd(handlerMarginEnd)
             .setOnDragListener { effectiveProgress = it.progress }
             .setOnEndDraggingListener {
-                updatePointSelected(true) { onPointSelectedStopUpdating?.invoke(it) }
+                updatePointSelected(true) {
+                    onPointSelectedStopUpdating?.invoke(lastPointSelected)
+                    onProgressStopChanging?.invoke(effectiveProgress)
+                }
             }
 
         handlerView.setOnTouchListener(onDrag)
@@ -714,8 +717,13 @@ class CurvedSeekBar : FrameLayout {
      * @param adjustX Parameter to tell if the handler's position must be adjusted
      * (in case of locking to point positions)
      */
-    private fun updatePointSelected(adjustX: Boolean, onEnd: (Int) -> Unit = {}) {
-        if (pointQuantity < segmentQuantity) {
+    private fun updatePointSelected(adjustX: Boolean, onEnd: () -> Unit = {}) {
+        if (pointQuantity == 0) {
+            onEnd()
+            return
+        }
+
+        if (pointQuantity in 1 until segmentQuantity) {
             Log.w(
                 "BezierSeekBar",
                 "Point quantity ($pointQuantity) is less than segment quantity ($segmentQuantity)"
@@ -745,11 +753,11 @@ class CurvedSeekBar : FrameLayout {
                 }
 
                 lastPointSelected = point
-                onEnd(point)
+                onEnd()
             }
         } else {
             lastPointSelected = point
-            onEnd(point)
+            onEnd()
         }
     }
 
@@ -839,7 +847,7 @@ class CurvedSeekBar : FrameLayout {
      */
     fun setOnPointSelectedStopUpdating(onPointSelectedStopUpdating: PointSelectionListener) {
         this.onPointSelectedStopUpdating = {
-            if (it <= pointQuantity) onPointSelectedStopUpdating(it - 1)
+            if (it in 1..pointQuantity) onPointSelectedStopUpdating(it - 1)
         }
     }
 

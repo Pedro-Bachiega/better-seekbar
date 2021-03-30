@@ -19,10 +19,6 @@
         style="@style/BezierSeekBar"
         android:layout_width="match_parent"
         android:layout_height="146dp"
-        app:barColor="#FFCE2E"
-        app:highlightColor="#FFC700"
-        app:handlerColor="#FFFFFF"
-        app:segments="3"
         app:anchorX1="47.5"
         app:anchorX2="204.5"
         app:anchorY1="15.5"
@@ -31,7 +27,7 @@
         app:finalY="101.6"
         app:maxHighlightAlpha="0.3"
         app:graphMarginTop="36dp"
-        app:segmentDivider="0.5dp" />
+        app:segmentDivider="1dp" />
 
     <Space
         android:layout_width="match_parent"
