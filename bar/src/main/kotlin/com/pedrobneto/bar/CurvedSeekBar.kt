@@ -1,7 +1,12 @@
 package com.pedrobneto.bar
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Shader
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -531,7 +536,9 @@ class CurvedSeekBar : FrameLayout {
             segmentView.alpha = if (index == lastSegmentSelected) 1f else 0.5f
 
             segmentView.setOnClickListener {
-                preferredPointBySegment[index]?.run(::setSelectedPoint) ?: run {
+                if (pointQuantity > 0 && preferredPointBySegment.containsKey(index)) {
+                    preferredPointBySegment[index]?.run(::setSelectedPoint)
+                } else {
                     val newX = it.x + handlerMarginStart + (it.measuredWidth / 2)
                     adjustHandlerPosition(newX, animationsEnabled) {
                         lastSegmentSelected = index
@@ -708,7 +715,7 @@ class CurvedSeekBar : FrameLayout {
      * (in case of locking to point positions)
      */
     private fun updatePointSelected(adjustX: Boolean, onEnd: (Int) -> Unit = {}) {
-        if (pointQuantity in 1 until segmentQuantity) {
+        if (pointQuantity < segmentQuantity) {
             Log.w(
                 "BezierSeekBar",
                 "Point quantity ($pointQuantity) is less than segment quantity ($segmentQuantity)"
