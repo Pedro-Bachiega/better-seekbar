@@ -16,7 +16,7 @@
 
     <com.pedrobneto.bar.CurvedSeekBar
         android:id="@+id/seek_bar"
-        style="@style/BezierSeekBar"
+        style="@style/CurvedSeekBar"
         android:layout_width="match_parent"
         android:layout_height="146dp"
         app:anchorX1="47.5"

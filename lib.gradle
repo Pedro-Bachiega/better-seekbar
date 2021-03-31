@@ -3,6 +3,8 @@ ext.application = [
         compileSdk : 30,
         minSdk     : 21,
         targetSdk  : 30,
+
+        //Release
         versionCode: 1,
         versionName: '1.0.0'
 ]

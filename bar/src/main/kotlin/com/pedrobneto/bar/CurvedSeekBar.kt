@@ -375,7 +375,7 @@ class CurvedSeekBar : FrameLayout {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ) : this(context, attrs, defStyleAttr, R.style.BezierSeekBar)
+    ) : this(context, attrs, defStyleAttr, R.style.CurvedSeekBar)
 
     constructor(
         context: Context,

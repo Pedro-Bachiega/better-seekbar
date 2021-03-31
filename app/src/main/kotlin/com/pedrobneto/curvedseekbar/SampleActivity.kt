@@ -43,8 +43,8 @@ class SampleActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onAttachedToWindow() {
-//        super.onAttachedToWindow()
-//        seekBar.doOnPreDraw { seekBar.setSelectedPoint(preferredPointBySegment[1]!!) }
-//    }
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        seekBar.doOnPreDraw { seekBar.setSelectedPoint(preferredPointBySegment[1]!!) }
+    }
 }
