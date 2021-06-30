@@ -9,10 +9,9 @@
         <item name="handlerMarginEnd">@dimen/default_handler_horizontal_margin</item>
 
         <item name="barColor">?attr/colorPrimary</item>
-        <item name="handlerColor">?attr/colorAccent</item>
 
-        <item name="android:paddingTop">@dimen/default_vertical_padding</item>
-        <item name="android:paddingBottom">@dimen/default_vertical_padding</item>
+        <item name="android:paddingTop">@dimen/default_top_padding</item>
+        <item name="android:paddingBottom">@dimen/default_bottom_padding</item>
     </style>
 
 </resources>

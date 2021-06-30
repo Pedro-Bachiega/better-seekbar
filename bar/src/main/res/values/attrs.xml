@@ -27,6 +27,19 @@
         <!--region Bar-->
         <attr name="barStrokeSize" format="dimension" />
         <attr name="barColor" format="color" />
+        <attr name="barGlowEnabled" format="boolean" />
+        <!--endregion-->
+
+        <!--region Bar Indicator-->
+        <attr name="barIndicatorEnabled" format="boolean" />
+        <attr name="barIndicatorStrokeSize" format="dimension" />
+        <attr name="barIndicatorColor" format="color" />
+        <!--endregion-->
+
+        <!--region Bar PointsIndicator-->
+        <attr name="barIndicatorPointsEnabled" format="boolean" />
+        <attr name="barIndicatorPointsContainerHeight" format="dimension" />
+        <attr name="barIndicatorPointsColor" format="color" />
         <!--endregion-->
 
         <!--region Highlight-->
@@ -41,6 +54,10 @@
         <attr name="handlerMarginEnd" format="dimension" />
         <attr name="handlerColor" format="color" />
         <attr name="handlerResource" format="reference" />
+        <!--endregion-->
+
+        <!--region Haptic Feedback-->
+        <attr name="android:hapticFeedbackEnabled" />
         <!--endregion-->
     </declare-styleable>
 </resources>

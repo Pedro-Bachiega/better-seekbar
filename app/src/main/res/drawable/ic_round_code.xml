@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:width="@dimen/default_handler_size"
+        android:height="@dimen/default_handler_size">
+        <shape android:shape="oval">
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+
+    <item
+        android:width="20dp"
+        android:height="20dp"
+        android:drawable="@drawable/ic_round_code_24"
+        android:gravity="center" />
+</layer-list>
+

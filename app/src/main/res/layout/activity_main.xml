@@ -18,16 +18,25 @@
         android:id="@+id/seek_bar"
         style="@style/CurvedSeekBar"
         android:layout_width="match_parent"
-        android:layout_height="146dp"
+        android:layout_height="184dp"
+        android:hapticFeedbackEnabled="true"
         app:anchorX1="47.5"
         app:anchorX2="204.5"
-        app:anchorY1="15.5"
-        app:anchorY2="95.5"
+        app:anchorY1="5.5"
+        app:anchorY2="105.5"
+        app:barGlowEnabled="true"
+        app:barIndicatorEnabled="true"
+        app:barIndicatorPointsColor="#c4c4c4"
+        app:barIndicatorPointsContainerHeight="32dp"
+        app:barIndicatorPointsEnabled="true"
+        app:barIndicatorStrokeSize="1dp"
         app:finalX="392.5"
-        app:finalY="101.6"
+        app:finalY="105.5"
+        app:graphMarginTop="32dp"
+        app:handlerResource="@drawable/ic_round_code"
         app:maxHighlightAlpha="0.3"
-        app:graphMarginTop="36dp"
-        app:segmentDivider="1dp" />
+        app:segmentDivider="1dp"
+        tools:initialProgress="0.8" />
 
     <Space
         android:layout_width="match_parent"
@@ -54,5 +63,28 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/previous"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Previous" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="Next" />
+
+    </LinearLayout>
 
 </LinearLayout>

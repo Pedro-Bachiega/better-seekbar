@@ -2,6 +2,7 @@ package com.pedrobneto.curvedseekbar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,14 +14,14 @@ class SampleActivity : AppCompatActivity() {
 
     private lateinit var seekBar: CurvedSeekBar
 
-    private val preferredPointBySegment = mapOf(0 to 2, 1 to 8, 2 to 11)
+    private val preferredPointBySegment = mapOf(0 to 11, 1 to 33, 2 to 55)
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val totalPoints = 0
+        val totalPoints = 66
 
         val topTextView = findViewById<TextView>(R.id.top_text_view)
         val bottomTextView = findViewById<TextView>(R.id.bottom_text_view)
@@ -33,7 +34,7 @@ class SampleActivity : AppCompatActivity() {
 
         if (totalPoints > 0) {
             seekBar.pointQuantity = totalPoints
-            seekBar.segmentQuantity = 5
+            seekBar.segmentQuantity = 3
             seekBar.setPreferredPointOnClickBySegment(preferredPointBySegment)
         } else {
             seekBar.setOnProgressUpdatedListener { bottomTextView.text = "Progress: ${it * 100}%" }
@@ -41,6 +42,9 @@ class SampleActivity : AppCompatActivity() {
                 Toast.makeText(this, "Progress: ${it * 100}%", Toast.LENGTH_SHORT).show()
             }
         }
+
+        findViewById<View>(R.id.previous).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected -1 ) }
+        findViewById<View>(R.id.next).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected +1 ) }
     }
 
     override fun onAttachedToWindow() {
