@@ -1020,9 +1020,9 @@ class CurvedSeekBar : FrameLayout {
     private fun vibrate() {
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(1L, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator.vibrate(VibrationEffect.createOneShot(5L, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            vibrator.vibrate(1L)
+            vibrator.vibrate(5L)
         }
     }
 
@@ -1176,7 +1176,7 @@ class CurvedSeekBar : FrameLayout {
             linePaint.style = Paint.Style.STROKE
             linePaint.strokeWidth = lineIndicatorStrokeSize
 
-            drawLine(handlerX, measuredHeight.toFloat(), handlerX, 0f, linePaint)
+            drawLine(handlerX, measuredHeight.toFloat() * 0.85f, handlerX, 0f, linePaint)
         }
 
         private fun Canvas.drawPointIndicators(handlerX: Float) {
