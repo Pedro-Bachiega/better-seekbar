@@ -39,7 +39,12 @@
         <!--region Bar PointsIndicator-->
         <attr name="barIndicatorPointsEnabled" format="boolean" />
         <attr name="barIndicatorPointsContainerHeight" format="dimension" />
+        <attr name="barIndicatorPointsContainerFormat" format="enum" >
+            <enum name="line" value="0"/>
+            <enum name="circle" value="1"/>
+        </attr>
         <attr name="barIndicatorPointsColor" format="color" />
+        <attr name="barIndicatorArrowColor" format="color" />
         <!--endregion-->
 
         <!--region Highlight-->

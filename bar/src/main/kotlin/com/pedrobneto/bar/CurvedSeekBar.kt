@@ -3,12 +3,7 @@ package com.pedrobneto.bar
 import android.animation.ArgbEvaluator
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Shader
+import android.graphics.*
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -244,6 +239,12 @@ class CurvedSeekBar : FrameLayout {
     private var pointsColor = Color.YELLOW
 
     /**
+     * Color to be used on the SeekBar's points.
+     */
+    @ColorInt
+    private var pointsArrowColor = Color.YELLOW
+
+    /**
      * Color to be used on the SeekBar's indicator line.
      */
     @ColorInt
@@ -283,14 +284,11 @@ class CurvedSeekBar : FrameLayout {
 
                 previousView.isEnabled = value > 1
                 val scalePrevious = if (previousView.isEnabled) 1f else 0.8f
-                previousView.scaleX = scalePrevious
-                previousView.scaleY = scalePrevious
+                previousView.animate().scaleX(scalePrevious).scaleY(scalePrevious)
 
                 nextView.isEnabled = value < pointQuantity
                 val scaleNext = if (nextView.isEnabled) 1f else 0.8f
-                nextView.scaleX = scaleNext
-                nextView.scaleY = scaleNext
-
+                nextView.animate().scaleX(scaleNext).scaleY(scaleNext)
             }
         }
 
@@ -385,6 +383,13 @@ class CurvedSeekBar : FrameLayout {
      * Flag to determine whether or not we are drawing the Seekbar's line glow
      */
     var barGlowEnabled = false
+
+    /**
+     * Flag to control the indicator style.
+     * True means = Draw like a line
+     * False means = Draw like a circle
+     */
+    private var indicatorStyleAsLine = true
     //endregion
 
     //region Progress
@@ -582,6 +587,8 @@ class CurvedSeekBar : FrameLayout {
         barIndicatorColor = typedArray.getColor(R.styleable.CurvedSeekBar_barColor, barColor)
         pointsColor =
             typedArray.getColor(R.styleable.CurvedSeekBar_barIndicatorPointsColor, barColor)
+        pointsArrowColor =
+            typedArray.getColor(R.styleable.CurvedSeekBar_barIndicatorArrowColor, pointsColor)
         if (typedArray.hasValue(R.styleable.CurvedSeekBar_handlerColor)) {
             handlerColor = typedArray.getColor(R.styleable.CurvedSeekBar_handlerColor, Color.BLACK)
         }
@@ -606,6 +613,12 @@ class CurvedSeekBar : FrameLayout {
 
         barGlowEnabled =
             typedArray.getBoolean(R.styleable.CurvedSeekBar_barGlowEnabled, false)
+
+        indicatorStyleAsLine =
+            typedArray.getInteger(
+                R.styleable.CurvedSeekBar_barIndicatorPointsContainerFormat,
+                0
+            ) == 0
 
         typedArray.recycle()
     }
@@ -721,8 +734,8 @@ class CurvedSeekBar : FrameLayout {
             intArrayOf(-android.R.attr.state_enabled)
         )
         val colors = intArrayOf(
-            pointsColor,
-            ColorUtils.setAlphaComponent(pointsColor, 152)
+            pointsArrowColor,
+            ColorUtils.setAlphaComponent(pointsArrowColor, 152)
         )
         previousView.imageTintList = ColorStateList(states, colors)
     }
@@ -742,8 +755,8 @@ class CurvedSeekBar : FrameLayout {
             intArrayOf(-android.R.attr.state_enabled)
         )
         val colors = intArrayOf(
-            pointsColor,
-            ColorUtils.setAlphaComponent(pointsColor, 152)
+            pointsArrowColor,
+            ColorUtils.setAlphaComponent(pointsArrowColor, 152)
         )
         nextView.imageTintList = ColorStateList(states, colors)
     }
@@ -910,6 +923,9 @@ class CurvedSeekBar : FrameLayout {
                 onEnd()
             }
         } else {
+            if (pointQuantity == segmentQuantity) {
+                point = segments.indexOfFirst(View::isSelected) + 1
+            }
             lastPointSelected = point
             onEnd()
         }
@@ -953,10 +969,15 @@ class CurvedSeekBar : FrameLayout {
      * @param point Point to be selected (between 0 and given pointQuantity).
      */
     fun setSelectedPoint(point: Int) {
-        if (point > pointQuantity) return
-        if (point <= 0) return
+        if ((point == 0 && pointQuantity != segmentQuantity) || point < 0 || point > pointQuantity) return
 
-        val newX = (point * xPerPoint) + minAchievableX
+        val newX: Float = when (pointQuantity) {
+            segmentQuantity -> {
+                val selectedSegment = segments[point - 1]
+                selectedSegment.x + (selectedSegment.measuredWidth / 2) + handlerMarginEnd
+            }
+            else -> minAchievableX + (xPerPoint * point)
+        }
         adjustHandlerPosition(newX, animationsEnabled)
     }
 
@@ -1176,48 +1197,84 @@ class CurvedSeekBar : FrameLayout {
             linePaint.style = Paint.Style.STROKE
             linePaint.strokeWidth = lineIndicatorStrokeSize
 
-            drawLine(handlerX, measuredHeight.toFloat() * 0.85f, handlerX, 0f, linePaint)
+            drawLine(
+                handlerX,
+                if (indicatorStyleAsLine) measuredHeight.toFloat() * 0.85f else measuredHeight.toFloat() * 0.4f,
+                handlerX,
+                0f,
+                linePaint
+            )
         }
 
         private fun Canvas.drawPointIndicators(handlerX: Float) {
-            pointQuantity
 
             val pointsPaint = Paint()
-            pointsPaint.style = Paint.Style.STROKE
-            pointsPaint.strokeWidth = lineIndicatorStrokeSize
+            if (indicatorStyleAsLine) {
+                pointsPaint.style = Paint.Style.STROKE
+                pointsPaint.strokeWidth = lineIndicatorStrokeSize
+            } else {
+                pointsPaint.style = Paint.Style.FILL
+            }
 
             val pointsPath = Path()
             pointsPath.rewind()
 
-            val startOfPoints = initialX + (handlerMarginStart + handlerSize / 2)
-            val endOfPoints = finalX - (handlerMarginEnd + handlerSize / 2)
+            val startOfPoints = initialX + (handlerMarginStart + (handlerSize / 2))
+            val endOfPoints = finalX - (handlerMarginEnd + (handlerSize / 2))
             val step = (endOfPoints - startOfPoints) / pointQuantity
 
             val maxDistance = step * (pointQuantity / 20f).roundToInt()
             (1..pointQuantity).onEach {
-                val stepX = startOfPoints + (step * it)
+                val stepX = startOfPoints + when (pointQuantity) {
+                    segmentQuantity -> {
+                        val selectedSegment = segments[it - 1]
+                        selectedSegment.x + (selectedSegment.measuredWidth / 2f)
+                    }
+                    else -> (step * it)
+                }
 
                 val distance = (handlerX - stepX).absoluteValue
                 var distancePercent = (distance / maxDistance)
-                if (distancePercent > 1f) distancePercent = 1f
-
+                if (distancePercent > 1f || indicatorStyleAsLine.not()) distancePercent = 1f
 
                 val topLineY =
                     measuredHeight.toFloat() * (0.25f + (0.15f * distancePercent))//measuredHeight.toFloat() * (1f - (distancePercent))
                 val botLineY = measuredHeight.toFloat() * (0.75f - (0.15f * distancePercent))
                 if (distancePercent == 1f || !barGlowEnabled) {
                     pointsPath.moveTo(stepX, topLineY)
-                    pointsPath.lineTo(stepX, botLineY)
+                    if (indicatorStyleAsLine) {
+                        pointsPath.lineTo(stepX, botLineY)
+                    } else {
+                        pointsPath.addCircle(
+                            stepX,
+                            botLineY,
+                            lineIndicatorStrokeSize,
+                            Path.Direction.CW
+                        )
+                    }
                 } else {
                     pointsPaint.color = ArgbEvaluator().evaluate(
                         1 - distancePercent,
-                        ColorUtils.setAlphaComponent(pointsColor, 77),
+                        if (indicatorStyleAsLine) {
+                            ColorUtils.setAlphaComponent(pointsColor, 77)
+                        } else {
+                            pointsColor
+                        },
                         barIndicatorColor
                     ) as Int
-                    drawLine(stepX, topLineY, stepX, botLineY, pointsPaint)
+
+                    if (indicatorStyleAsLine) {
+                        drawLine(stepX, topLineY, stepX, botLineY, pointsPaint)
+                    } else {
+                        drawCircle(stepX, botLineY, lineIndicatorStrokeSize, pointsPaint)
+                    }
                 }
             }
-            pointsPaint.color = ColorUtils.setAlphaComponent(pointsColor, 77)
+            pointsPaint.color = if (indicatorStyleAsLine) {
+                ColorUtils.setAlphaComponent(pointsColor, 77)
+            } else {
+                pointsColor
+            }
             drawPath(pointsPath, pointsPaint)
         }
     }
