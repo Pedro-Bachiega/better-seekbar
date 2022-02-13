@@ -25,6 +25,7 @@
         app:anchorY1="5.5"
         app:anchorY2="105.5"
         app:barGlowEnabled="true"
+        app:highlightEnabled="false"
         app:barSeekbarFormat="straight"
         app:barIndicatorArrowColor="#c4c4c4"
         app:barIndicatorEnabled="true"

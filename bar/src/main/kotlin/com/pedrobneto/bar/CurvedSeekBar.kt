@@ -245,6 +245,12 @@ class CurvedSeekBar : FrameLayout {
     private var pointsColor = Color.YELLOW
 
     /**
+     * Color to be used on the SeekBar's points when are unselected.
+     */
+    @ColorInt
+    private var unselectedPointsColor = Color.DKGRAY
+
+    /**
      * Color to be used on the SeekBar's points.
      */
     @ColorInt
@@ -402,7 +408,14 @@ class CurvedSeekBar : FrameLayout {
      * True means = Draw seekbar based on Bezier´s cubic equation
      * False means = Draw a straight line seekbar
      */
-    private var seekBarFormatAsCurved: Boolean = true
+    private var seekBarFormatAsCurved = true
+
+    /**
+     * Flag to control the seekbar format.
+     * True means = Draw seekbar based on Bezier´s cubic equation
+     * False means = Draw a straight line seekbar
+     */
+    private var progressHighlightEnabled  = true
     //endregion
 
     //region Progress
@@ -600,6 +613,11 @@ class CurvedSeekBar : FrameLayout {
         barIndicatorColor = typedArray.getColor(R.styleable.CurvedSeekBar_barColor, barColor)
         pointsColor =
             typedArray.getColor(R.styleable.CurvedSeekBar_barIndicatorPointsColor, barColor)
+        unselectedPointsColor =
+            typedArray.getColor(
+                R.styleable.CurvedSeekBar_barIndicatorUnselectedPointsColor,
+                Color.DKGRAY
+            )
         pointsArrowColor =
             typedArray.getColor(R.styleable.CurvedSeekBar_barIndicatorArrowColor, pointsColor)
         if (typedArray.hasValue(R.styleable.CurvedSeekBar_handlerColor)) {
@@ -626,6 +644,9 @@ class CurvedSeekBar : FrameLayout {
 
         barGlowEnabled =
             typedArray.getBoolean(R.styleable.CurvedSeekBar_barGlowEnabled, false)
+
+        progressHighlightEnabled =
+            typedArray.getBoolean(R.styleable.CurvedSeekBar_highlightEnabled, true)
 
         seekBarFormatAsCurved =
             typedArray.getInteger(
@@ -1136,42 +1157,42 @@ class CurvedSeekBar : FrameLayout {
             val yTo = initialY + (lineStrokeSize / 2)
 
             while (x <= finalX) {
-                progress = x / finalX
 
                 val finalY = if (seekBarFormatAsCurved) getYForX(x) else straightLineY
                 linePath.lineTo(x, finalY)
                 lineHighlightPath.lineTo(x, finalY)
+                if (progressHighlightEnabled) {
+                    progress = x / finalX
+                    if (progress <= handlerProgressOnLine) {
+                        val actualProgress = 1f - (finalY / yTo)
 
-                if (progress <= handlerProgressOnLine) {
-                    val actualProgress = 1f - (finalY / yTo)
+                        val initialHighlightColor =
+                            ColorUtils.setAlphaComponent(
+                                highlightColor,
+                                (maxHighlightAlpha * 255 * actualProgress).roundToInt()
+                            )
+                        val finalHighlightColor =
+                            ColorUtils.setAlphaComponent(
+                                highlightColor,
+                                (minHighlightAlpha * 255).roundToInt()
+                            )
 
-                    val initialHighlightColor =
-                        ColorUtils.setAlphaComponent(
-                            highlightColor,
-                            (maxHighlightAlpha * 255 * actualProgress).roundToInt()
+                        highlightPaint.shader = LinearGradient(
+                            x,
+                            finalY,
+                            x,
+                            yTo,
+                            initialHighlightColor,
+                            finalHighlightColor,
+                            Shader.TileMode.CLAMP
                         )
-                    val finalHighlightColor =
-                        ColorUtils.setAlphaComponent(
-                            highlightColor,
-                            (minHighlightAlpha * 255).roundToInt()
-                        )
 
-                    highlightPaint.shader = LinearGradient(
-                        x,
-                        finalY,
-                        x,
-                        yTo,
-                        initialHighlightColor,
-                        finalHighlightColor,
-                        Shader.TileMode.CLAMP
-                    )
-
-                    val highlightPath = Path()
-                    highlightPath.moveTo(x, finalY)
-                    highlightPath.lineTo(x, yTo)
-                    drawPath(highlightPath, highlightPaint)
+                        val highlightPath = Path()
+                        highlightPath.moveTo(x, finalY)
+                        highlightPath.lineTo(x, yTo)
+                        drawPath(highlightPath, highlightPaint)
+                    }
                 }
-
                 x += 1f
             }
 
@@ -1195,7 +1216,7 @@ class CurvedSeekBar : FrameLayout {
 
             drawLine(
                 handlerX,
-                if (seekBarFormatAsCurved) getYForX(handlerX) else straightLineY,
+                if (seekBarFormatAsCurved) getYForX(finalX) else straightLineY,
                 handlerX,
                 measuredHeight.toFloat(),
                 linePaint
@@ -1310,7 +1331,7 @@ class CurvedSeekBar : FrameLayout {
             pointsPaint.color = if (indicatorStyleAsLine) {
                 ColorUtils.setAlphaComponent(pointsColor, 77)
             } else {
-                pointsColor
+                ColorUtils.setAlphaComponent(unselectedPointsColor, 77)
             }
             drawPath(pointsPath, pointsPaint)
         }

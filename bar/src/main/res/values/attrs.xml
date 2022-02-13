@@ -38,6 +38,7 @@
         <attr name="barIndicatorEnabled" format="boolean" />
         <attr name="barIndicatorStrokeSize" format="dimension" />
         <attr name="barIndicatorColor" format="color" />
+        <attr name="barIndicatorUnselectedPointsColor" format="color" />
         <!--endregion-->
 
         <!--region Bar PointsIndicator-->
@@ -55,6 +56,7 @@
         <attr name="minHighlightAlpha" format="float" />
         <attr name="maxHighlightAlpha" format="float" />
         <attr name="highlightColor" format="color" />
+        <attr name="highlightEnabled" format="boolean" />
         <!--endregion-->
 
         <!--region Handler-->
