@@ -1216,7 +1216,7 @@ class CurvedSeekBar : FrameLayout {
 
             drawLine(
                 handlerX,
-                if (seekBarFormatAsCurved) getYForX(finalX) else straightLineY,
+                if (seekBarFormatAsCurved) getYForX(handlerX) else straightLineY,
                 handlerX,
                 measuredHeight.toFloat(),
                 linePaint
@@ -1241,7 +1241,9 @@ class CurvedSeekBar : FrameLayout {
 
             val handlerX = (handlerView.x + handlerView.measuredWidth / 2)
             canvas?.drawPointIndicators(handlerX)
-            canvas?.drawIndicator(handlerX)
+            if (barIndicatorEnabled) {
+                canvas?.drawIndicator(handlerX)
+            }
         }
 
         private fun Canvas.drawIndicator(handlerX: Float) {
