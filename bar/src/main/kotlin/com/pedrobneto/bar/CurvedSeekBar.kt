@@ -144,6 +144,12 @@ class CurvedSeekBar : FrameLayout {
         get() = graphView.measuredHeight.toFloat() - (lineStrokeSize / 2)
 
     /**
+     * The y coordinate of the curve's start.
+     */
+    private val straightLineY: Float
+        get() = graphView.measuredHeight.toFloat() / 2f
+
+    /**
      * The first x coordinate to anchor the curve to.
      */
     private var _anchorX1: Float = 0f
@@ -390,6 +396,13 @@ class CurvedSeekBar : FrameLayout {
      * False means = Draw like a circle
      */
     private var indicatorStyleAsLine = true
+
+    /**
+     * Flag to control the seekbar format.
+     * True means = Draw seekbar based on Bezier´s cubic equation
+     * False means = Draw a straight line seekbar
+     */
+    private var seekBarFormatAsCurved: Boolean = true
     //endregion
 
     //region Progress
@@ -614,6 +627,12 @@ class CurvedSeekBar : FrameLayout {
         barGlowEnabled =
             typedArray.getBoolean(R.styleable.CurvedSeekBar_barGlowEnabled, false)
 
+        seekBarFormatAsCurved =
+            typedArray.getInteger(
+                R.styleable.CurvedSeekBar_barSeekbarFormat,
+                0
+            ) == 0
+
         indicatorStyleAsLine =
             typedArray.getInteger(
                 R.styleable.CurvedSeekBar_barIndicatorPointsContainerFormat,
@@ -819,7 +838,11 @@ class CurvedSeekBar : FrameLayout {
      * it will stick to the curve.
      */
     private fun fixHandlerY() {
-        handlerView.y = offset + getYForX(handlerCenterX)
+        handlerView.y = if (seekBarFormatAsCurved) {
+            offset + getYForX(handlerCenterX)
+        } else {
+            measuredHeight / 2f - lineStrokeSize - lineIndicatorStrokeSize
+        }
     }
 
     /**
@@ -1080,6 +1103,8 @@ class CurvedSeekBar : FrameLayout {
         private fun Canvas.drawBar(handlerX: Float) {
             val highlightStrokeSize = resources.getDimension(R.dimen.default_highlight_stroke_size)
 
+            val y = if (seekBarFormatAsCurved) initialY else straightLineY
+
             val linePaint = Paint()
             linePaint.color = barColor
             linePaint.style = Paint.Style.STROKE
@@ -1097,11 +1122,11 @@ class CurvedSeekBar : FrameLayout {
 
             val linePath = Path()
             linePath.rewind()
-            linePath.moveTo(initialX, initialY)
+            linePath.moveTo(initialX, y)
 
             val lineHighlightPath = Path()
             lineHighlightPath.rewind()
-            lineHighlightPath.moveTo(initialX, initialY)
+            lineHighlightPath.moveTo(initialX, y)
 
             var x = 0f
             var progress: Float
@@ -1113,12 +1138,12 @@ class CurvedSeekBar : FrameLayout {
             while (x <= finalX) {
                 progress = x / finalX
 
-                val y = getYForX(x)
-                linePath.lineTo(x, y)
-                lineHighlightPath.lineTo(x, y)
+                val finalY = if (seekBarFormatAsCurved) getYForX(x) else straightLineY
+                linePath.lineTo(x, finalY)
+                lineHighlightPath.lineTo(x, finalY)
 
                 if (progress <= handlerProgressOnLine) {
-                    val actualProgress = 1f - (y / yTo)
+                    val actualProgress = 1f - (finalY / yTo)
 
                     val initialHighlightColor =
                         ColorUtils.setAlphaComponent(
@@ -1133,7 +1158,7 @@ class CurvedSeekBar : FrameLayout {
 
                     highlightPaint.shader = LinearGradient(
                         x,
-                        y,
+                        finalY,
                         x,
                         yTo,
                         initialHighlightColor,
@@ -1142,7 +1167,7 @@ class CurvedSeekBar : FrameLayout {
                     )
 
                     val highlightPath = Path()
-                    highlightPath.moveTo(x, y)
+                    highlightPath.moveTo(x, finalY)
                     highlightPath.lineTo(x, yTo)
                     drawPath(highlightPath, highlightPaint)
                 }
@@ -1150,12 +1175,14 @@ class CurvedSeekBar : FrameLayout {
                 x += 1f
             }
 
-            lineHighlightPath.lineTo(finalX, getYForX(finalX))
+            val finalY = if (seekBarFormatAsCurved) getYForX(finalX) else straightLineY
+
+            lineHighlightPath.lineTo(finalX, finalY)
             if (barGlowEnabled) {
                 drawPath(lineHighlightPath, lineHighlightPaint)
             }
 
-            linePath.lineTo(finalX, getYForX(finalX))
+            linePath.lineTo(finalX, finalY)
             drawPath(linePath, linePaint)
         }
 
@@ -1166,7 +1193,13 @@ class CurvedSeekBar : FrameLayout {
             linePaint.style = Paint.Style.STROKE
             linePaint.strokeWidth = lineIndicatorStrokeSize
 
-            drawLine(handlerX, getYForX(handlerX), handlerX, measuredHeight.toFloat(), linePaint)
+            drawLine(
+                handlerX,
+                if (seekBarFormatAsCurved) getYForX(handlerX) else straightLineY,
+                handlerX,
+                measuredHeight.toFloat(),
+                linePaint
+            )
         }
     }
 
@@ -1251,6 +1284,10 @@ class CurvedSeekBar : FrameLayout {
                             lineIndicatorStrokeSize,
                             Path.Direction.CW
                         )
+                        if (stepX.toInt() == handlerCenterX.toInt()) {
+                            pointsPaint.color = pointsColor
+                            drawCircle(stepX, botLineY, lineIndicatorStrokeSize, pointsPaint)
+                        }
                     }
                 } else {
                     pointsPaint.color = ArgbEvaluator().evaluate(

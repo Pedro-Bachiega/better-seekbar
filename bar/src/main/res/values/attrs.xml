@@ -28,6 +28,10 @@
         <attr name="barStrokeSize" format="dimension" />
         <attr name="barColor" format="color" />
         <attr name="barGlowEnabled" format="boolean" />
+        <attr name="barSeekbarFormat" format="enum">
+            <enum name="curved" value="0" />
+            <enum name="straight" value="1" />
+        </attr>
         <!--endregion-->
 
         <!--region Bar Indicator-->
