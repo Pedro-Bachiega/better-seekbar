@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    tools:context=".MainSampleActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="CurvedSeekBar" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.pedrobneto.bar.CurvedSeekBar
+        android:id="@+id/seek_bar"
+        style="@style/CurvedSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="184dp"
+        android:hapticFeedbackEnabled="true"
+        app:anchorX1="47.5"
+        app:anchorX2="204.5"
+        app:anchorY1="5.5"
+        app:anchorY2="105.5"
+        app:barGlowEnabled="true"
+        app:barIndicatorArrowColor="#c4c4c4"
+        app:barIndicatorEnabled="true"
+        app:barIndicatorPointsColor="#c4c4c4"
+        app:barIndicatorPointsContainerFormat="circle"
+        app:barIndicatorPointsContainerHeight="32dp"
+        app:barIndicatorPointsEnabled="true"
+        app:barIndicatorStrokeSize="2dp"
+        app:finalX="392.5"
+        app:finalY="105.5"
+        app:graphMarginTop="32dp"
+        app:handlerResource="@drawable/ic_round_code"
+        app:maxHighlightAlpha="0.3"
+        app:segmentDivider="1dp"
+        tools:initialProgress="0.8" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/top_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:text="Points: 5" />
+
+    <TextView
+        android:id="@+id/bottom_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center_horizontal"
+        android:text="Selected point: 1"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/previous"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Previous" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="Next" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -8,19 +8,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
-import com.pedrobneto.bar.CurvedSeekBar
+import com.pedrobneto.bar.BetterSeekBar
 
-class SampleActivity : AppCompatActivity() {
+open class BetterSeekBarSampleActivity : AppCompatActivity() {
 
-    private lateinit var seekBar: CurvedSeekBar
+    private lateinit var seekBar: BetterSeekBar
 
-//    private val preferredPointBySegment = mapOf(0 to 11, 1 to 33, 2 to 55)
+    //    private val preferredPointBySegment = mapOf(0 to 11, 1 to 33, 2 to 55)
     private val preferredPointBySegment = mapOf(0 to 1, 1 to 2, 2 to 3, 3 to 4, 4 to 5)
+
+    protected open val layoutRes: Int = R.layout.activity_better_seek_bar
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(layoutRes)
 
 //        val totalPoints = 66
         val totalPoints = 5
@@ -46,8 +48,8 @@ class SampleActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<View>(R.id.previous).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected -1 ) }
-        findViewById<View>(R.id.next).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected +1 ) }
+        findViewById<View>(R.id.previous).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected - 1) }
+        findViewById<View>(R.id.next).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected + 1) }
     }
 
     override fun onAttachedToWindow() {

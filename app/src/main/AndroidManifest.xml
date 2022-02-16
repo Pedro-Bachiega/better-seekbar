@@ -11,13 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CurvedSeekBar"
         tools:ignore="AllowBackup">
-        <activity android:name=".SampleActivity">
+        <activity android:name=".MainSampleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BetterSeekBarSampleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CurvedSeekBarSampleActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

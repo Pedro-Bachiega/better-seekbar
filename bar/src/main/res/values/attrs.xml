@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CurvedSeekBar">
+    <declare-styleable name="BetterSeekBar">
         <!--region Progress-->
         <attr name="initialProgress" format="float" />
-        <!--endregion-->
-
-        <!--region Points-->
-        <attr name="anchorX1" format="float" />
-        <attr name="anchorX2" format="float" />
-        <attr name="anchorY1" format="float" />
-        <attr name="anchorY2" format="float" />
-        <attr name="finalY" format="float" />
-        <attr name="finalX" format="float" />
         <!--endregion-->
 
         <!--region Graph's margins-->
@@ -39,11 +30,12 @@
         <!--region Bar PointsIndicator-->
         <attr name="barIndicatorPointsEnabled" format="boolean" />
         <attr name="barIndicatorPointsContainerHeight" format="dimension" />
-        <attr name="barIndicatorPointsContainerFormat" format="enum" >
-            <enum name="line" value="0"/>
-            <enum name="circle" value="1"/>
+        <attr name="barIndicatorPointsContainerFormat" format="enum">
+            <enum name="line" value="0" />
+            <enum name="circle" value="1" />
         </attr>
         <attr name="barIndicatorPointsColor" format="color" />
+        <attr name="barIndicatorUnselectedPointsColor" format="color" />
         <attr name="barIndicatorArrowColor" format="color" />
         <!--endregion-->
 
@@ -51,6 +43,7 @@
         <attr name="minHighlightAlpha" format="float" />
         <attr name="maxHighlightAlpha" format="float" />
         <attr name="highlightColor" format="color" />
+        <attr name="highlightEnabled" format="boolean" />
         <!--endregion-->
 
         <!--region Handler-->
@@ -63,6 +56,17 @@
 
         <!--region Haptic Feedback-->
         <attr name="android:hapticFeedbackEnabled" />
+        <!--endregion-->
+    </declare-styleable>
+
+    <declare-styleable name="CurvedSeekBar">
+        <!--region Points-->
+        <attr name="anchorX1" format="float" />
+        <attr name="anchorX2" format="float" />
+        <attr name="anchorY1" format="float" />
+        <attr name="anchorY2" format="float" />
+        <attr name="finalY" format="float" />
+        <attr name="finalX" format="float" />
         <!--endregion-->
     </declare-styleable>
 </resources>
