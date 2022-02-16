@@ -3,12 +3,7 @@ package com.pedrobneto.bar
 import android.animation.ArgbEvaluator
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Shader
+import android.graphics.*
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -891,7 +886,7 @@ open class BetterSeekBar : FrameLayout {
 
         if (pointQuantity in 1 until segmentQuantity) {
             Log.w(
-                "BezierSeekBar",
+                "BetterSeekBar",
                 "Point quantity ($pointQuantity) is less than segment quantity ($segmentQuantity)"
             )
             return
@@ -1229,7 +1224,7 @@ open class BetterSeekBar : FrameLayout {
                             Path.Direction.CW
                         )
 
-                        if (stepX.roundToInt() == handlerCenterX.roundToInt()) {
+                        if (handlerCenterX - stepX in (-1f..1f)) {
                             pointsPaint.color = pointsColor
                             drawCircle(stepX, botLineY, lineIndicatorStrokeSize, pointsPaint)
                         }
