@@ -439,7 +439,7 @@ open class BetterSeekBar : FrameLayout {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ) : this(context, attrs, defStyleAttr, R.style.CurvedSeekBar)
+    ) : this(context, attrs, defStyleAttr, R.style.BetterSeekBar)
 
     constructor(
         context: Context,

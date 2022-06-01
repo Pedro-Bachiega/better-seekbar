@@ -22,24 +22,9 @@
 
     <com.pedrobneto.bar.BetterSeekBar
         android:id="@+id/seek_bar"
-        style="@style/CurvedSeekBar"
+        style="@style/SeekBar"
         android:layout_width="match_parent"
         android:layout_height="184dp"
-        android:hapticFeedbackEnabled="true"
-        app:barGlowEnabled="true"
-        app:barIndicatorArrowColor="#c4c4c4"
-        app:barIndicatorEnabled="false"
-        app:barIndicatorPointsColor="#c4c4c4"
-        app:barIndicatorUnselectedPointsColor="#ffffff"
-        app:barIndicatorPointsContainerFormat="circle"
-        app:barIndicatorPointsContainerHeight="32dp"
-        app:barIndicatorPointsEnabled="true"
-        app:barIndicatorStrokeSize="2dp"
-        app:graphMarginTop="32dp"
-        app:handlerResource="@drawable/ic_round_code"
-        app:highlightEnabled="false"
-        app:maxHighlightAlpha="0.3"
-        app:segmentDivider="1dp"
         tools:initialProgress="0.8" />
 
     <Space

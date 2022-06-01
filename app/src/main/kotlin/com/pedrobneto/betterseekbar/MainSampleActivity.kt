@@ -1,4 +1,4 @@
-package com.pedrobneto.curvedseekbar
+package com.pedrobneto.betterseekbar
 
 import android.annotation.SuppressLint
 import android.content.Intent

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.pedrobneto.curvedseekbar">
+    package="com.pedrobneto.betterseekbar">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CurvedSeekBar"
         tools:ignore="AllowBackup">
-        <activity android:name=".MainSampleActivity">
+        <activity android:name="com.pedrobneto.betterseekbar.MainSampleActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,10 +20,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BetterSeekBarSampleActivity"
+            android:name="com.pedrobneto.betterseekbar.BetterSeekBarSampleActivity"
             android:exported="false" />
         <activity
-            android:name=".CurvedSeekBarSampleActivity"
+            android:name="com.pedrobneto.betterseekbar.CurvedSeekBarSampleActivity"
             android:exported="false" />
     </application>
 

@@ -1,8 +1,8 @@
-# curved-seekbar
-Curved SeekBar for Android apps based on Bezier's cubic curve :)
+# BetterSeekbar
+A better and customizable SeekBar for Android apps :)
 
 ## Points and segments based
-![](CurvedSeekBar-points-and-segments.gif)
+![](gifs/CurvedSeekBar-points-and-segments.gif)
 
 ## Progress based
-![](CurvedSeekBar-progress.gif)
+![](gifs/CurvedSeekBar-progress.gif)

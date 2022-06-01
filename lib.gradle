@@ -1,10 +1,10 @@
 ext.application = [
         buildTools : '30.0.3',
-        compileSdk : 30,
+        compileSdk : 32,
         minSdk     : 23,
-        targetSdk  : 30,
+        targetSdk  : 32,
 
         //Release
-        versionCode: 4,
-        versionName: '1.0.4',
+        versionCode: 1,
+        versionName: '0.0.1',
 ]

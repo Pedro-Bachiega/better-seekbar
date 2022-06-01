@@ -1,6 +1,5 @@
 buildscript {
     apply from: 'lib.gradle'
-    apply from: 'versions.gradle'
 
     repositories {
         google()
@@ -9,8 +8,8 @@ buildscript {
     }
 
     dependencies {
-        classpath dependency_versions.gradle
-        classpath dependency_versions.kotlinGradle
+        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
     }
 }
 

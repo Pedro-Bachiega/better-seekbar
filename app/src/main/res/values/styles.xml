@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SeekBar" parent="BetterSeekBar">
+        <item name="android:hapticFeedbackEnabled">true</item>
+        <item name="barGlowEnabled">true</item>
+        <item name="barIndicatorArrowColor">#C4C4C4</item>
+        <item name="barIndicatorEnabled">false</item>
+        <item name="barIndicatorPointsColor">#C4C4C4</item>
+        <item name="barIndicatorUnselectedPointsColor">#FFFFFF</item>
+        <item name="barIndicatorPointsContainerFormat">circle</item>
+        <item name="barIndicatorPointsContainerHeight">32dp</item>
+        <item name="barIndicatorPointsEnabled">true</item>
+        <item name="barIndicatorStrokeSize">2dp</item>
+        <item name="graphMarginTop">32dp</item>
+        <item name="handlerResource">@drawable/ic_round_code</item>
+        <item name="highlightEnabled">false</item>
+        <item name="maxHighlightAlpha">0.3</item>
+        <item name="segmentDivider">1dp</item>
+    </style>
+
+    <style name="CurvedSeekBar" parent="SeekBar">
+        <item name="barIndicatorEnabled">true</item>
+        <item name="highlightEnabled">true</item>
+    </style>
+
+</resources>

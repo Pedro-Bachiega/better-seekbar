@@ -30,20 +30,8 @@
         app:anchorX2="204.5"
         app:anchorY1="5.5"
         app:anchorY2="105.5"
-        app:barGlowEnabled="true"
-        app:barIndicatorArrowColor="#c4c4c4"
-        app:barIndicatorEnabled="true"
-        app:barIndicatorPointsColor="#c4c4c4"
-        app:barIndicatorPointsContainerFormat="circle"
-        app:barIndicatorPointsContainerHeight="32dp"
-        app:barIndicatorPointsEnabled="true"
-        app:barIndicatorStrokeSize="2dp"
         app:finalX="392.5"
         app:finalY="105.5"
-        app:graphMarginTop="32dp"
-        app:handlerResource="@drawable/ic_round_code"
-        app:maxHighlightAlpha="0.3"
-        app:segmentDivider="1dp"
         tools:initialProgress="0.8" />
 
     <Space
