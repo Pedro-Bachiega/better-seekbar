@@ -1093,16 +1093,14 @@ open class BetterSeekBar : FrameLayout {
                     if (progress <= handlerProgressOnLine) {
                         val actualProgress = 1f - (y / yTo)
 
-                        val initialHighlightColor =
-                            ColorUtils.setAlphaComponent(
-                                highlightColor,
-                                (maxHighlightAlpha * 255 * actualProgress).roundToInt()
-                            )
-                        val finalHighlightColor =
-                            ColorUtils.setAlphaComponent(
-                                highlightColor,
-                                (minHighlightAlpha * 255).roundToInt()
-                            )
+                        val initialHighlightColor = ColorUtils.setAlphaComponent(
+                            highlightColor,
+                            (maxHighlightAlpha * 255 * actualProgress).roundToInt()
+                        )
+                        val finalHighlightColor = ColorUtils.setAlphaComponent(
+                            highlightColor,
+                            (minHighlightAlpha * 255).roundToInt()
+                        )
 
                         highlightPaint.shader = LinearGradient(
                             x,
@@ -1134,7 +1132,6 @@ open class BetterSeekBar : FrameLayout {
         }
 
         private fun Canvas.drawIndicator(handlerX: Float) {
-
             val linePaint = Paint()
             linePaint.color = barIndicatorColor
             linePaint.style = Paint.Style.STROKE
@@ -1148,7 +1145,6 @@ open class BetterSeekBar : FrameLayout {
      * Layer that will be used to draw the point indicators and highlight (if chosen).
      */
     protected inner class GraphIndicatorView(context: Context) : View(context) {
-
         init {
             clipChildren = false
             clipToPadding = false
@@ -1197,21 +1193,18 @@ open class BetterSeekBar : FrameLayout {
 
             val maxDistance = step * (pointQuantity / 20f).roundToInt()
             (1..pointQuantity).onEach {
-                val stepX = startOfPoints + when (pointQuantity) {
-                    segmentQuantity -> {
-                        val selectedSegment = segments[it - 1]
-                        selectedSegment.x + (selectedSegment.measuredWidth / 2f)
-                    }
-                    else -> (step * it)
+                val stepX = startOfPoints + if (pointQuantity != segmentQuantity) step * it else {
+                    val selectedSegment = segments[it - 1]
+                    selectedSegment.x + (selectedSegment.measuredWidth / 2f)
                 }
 
                 val distance = (handlerX - stepX).absoluteValue
                 var distancePercent = (distance / maxDistance)
                 if (distancePercent > 1f || indicatorStyleAsLine.not()) distancePercent = 1f
 
-                val topLineY =
-                    measuredHeight.toFloat() * (0.25f + (0.15f * distancePercent))//measuredHeight.toFloat() * (1f - (distancePercent))
+                val topLineY = measuredHeight.toFloat() * (0.25f + (0.15f * distancePercent))
                 val botLineY = measuredHeight.toFloat() * (0.75f - (0.15f * distancePercent))
+
                 if (distancePercent == 1f || !barGlowEnabled) {
                     pointsPath.moveTo(stepX, topLineY)
                     if (indicatorStyleAsLine) {
@@ -1247,6 +1240,7 @@ open class BetterSeekBar : FrameLayout {
                     }
                 }
             }
+
             pointsPaint.color = ColorUtils.setAlphaComponent(
                 if (indicatorStyleAsLine) pointsColor else unselectedPointsColor,
                 77
