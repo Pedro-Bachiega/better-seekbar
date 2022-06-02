@@ -1,19 +1,64 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'maven'
+    id 'maven-publish'
     id 'signing'
 }
 
 group = "io.github.pedro-bachiega"
-archivesBaseName = "better-seekbar"
 version = application.versionName
 
-signing {
-    sign configurations.archives
+publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            name = "maven"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+
+    publications {
+        betterSeekbar(MavenPublication) {
+            artifactId = "better-seekbar"
+
+            pom {
+                name = "Better SeekBar"
+                description = "A better and customizable version of SeekBar for Android apps"
+                url = "https://github.com/Pedro-Bachiega/better-seekbar"
+
+                scm {
+                    url = "https://github.com/Pedro-Bachiega/better-seekbar"
+                    connection = "scm:https://github.com/Pedro-Bachiega/better-seekbar.git"
+                    developerConnection = "scm:git@github.com:Pedro-Bachiega/better-seekbar.git"
+                }
+
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = developerId
+                        name = developerName
+                        email = developerEmail
+                    }
+                }
+            }
+        }
+    }
 }
 
 android {
+    namespace 'com.pedrobneto.bar'
+
     task sourcesJar(type: Jar) {
         from android.sourceSets.main.java.srcDirs
         classifier = 'sources'
@@ -38,49 +83,15 @@ android {
     artifacts {
         archives javadocJar, sourcesJar
     }
+}
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+signing {
+    sign publishing.publications.betterSeekbar
+}
 
-                repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                pom.project {
-                    name 'Better SeekBar'
-                    packaging 'jar'
-                    description 'A better and customizable version of SeekBar for Android apps'
-                    url 'https://github.com/Pedro-Bachiega/better-seekbar'
-
-                    scm {
-                        url 'https://github.com/Pedro-Bachiega/better-seekbar'
-                        connection "scm:https://github.com/Pedro-Bachiega/better-seekbar.git"
-                        developerConnection 'scm:git@github.com:Pedro-Bachiega/better-seekbar.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'The Apache License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id developerId
-                            name developerName
-                            email developerEmail
-                        }
-                    }
-                }
-            }
-        }
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
 

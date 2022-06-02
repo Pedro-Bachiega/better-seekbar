@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+    namespace 'com.pedrobneto.betterseekbar'
+
     defaultConfig {
         applicationId "com.pedrobneto.betterseekbar"
     }
