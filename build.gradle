@@ -4,12 +4,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/releases/" }
+        mavenLocal()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
+        classpath 'io.github.pedro-bachiega:sonatype-maven-publish:0.0.1-SNAPSHOT'
     }
 }
 
@@ -56,12 +57,9 @@ allprojects {
             sourceSets.forEach { sourceSet ->
                 sourceSet.jniLibs.srcDirs = ['libs', "libs/${sourceSet.name}"]
                 sourceSet.java.srcDirs += "src/${sourceSet.name}/kotlin"
+                sourceSet.java.srcDirs += "src/${sourceSet.name}/groovy"
                 sourceSet.assets.srcDirs += "src/${sourceSet.name}/assets"
             }
         }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
