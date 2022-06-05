@@ -4,13 +4,12 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
-        classpath 'io.github.pedro-bachiega:sonatype-maven-publish:0.0.1-SNAPSHOT'
+        classpath 'io.github.pedro-bachiega:sonatype-maven-publish:0.0.2'
     }
 }
 

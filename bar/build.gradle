@@ -5,9 +5,6 @@ plugins {
 
 apply from: "$rootDir/tools/publish.gradle"
 
-group = "io.github.pedro-bachiega"
-version = application.versionName
-
 android {
     namespace 'com.pedrobneto.bar'
 

@@ -1,11 +1,9 @@
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
 apply plugin: 'io.github.pedro-bachiega.sonatype-maven-publish'
 
+group = "io.github.pedro-bachiega"
+version = application.versionName
+
 sonatypePublishing {
-    artifactId = "better-seekbar"
-    libName = "Better SeekBar"
-    libDescription = "A better and customizable version of SeekBar for Android apps"
     repositoryUrl = "https://github.com/Pedro-Bachiega/better-seekbar"
     repositoryConnectionUrl = "scm:https://github.com/Pedro-Bachiega/better-seekbar.git"
     licenseName = "The Apache License, Version 2.0"
@@ -15,4 +13,12 @@ sonatypePublishing {
     developerEmail = DEVELOPER_EMAIL
     username = OSSRH_USERNAME
     password = OSSRH_PASSWORD
+}
+
+publications {
+    library {
+        artifactId = "better-seekbar"
+        libName = "Better SeekBar"
+        libDescription = "A better and customizable version of SeekBar for Android apps"
+    }
 }
