@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="curved_seekbar_handler" type="id" />
+    <item name="better_seekbar_handler" type="id" />
 </resources>

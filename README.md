@@ -2,7 +2,9 @@
 A better and customizable SeekBar for Android apps :)
 
 ## Points and segments based
-![](gifs/CurvedSeekBar-points-and-segments.gif)
+![](gifs/betterseekbar_point_sample.gif)
+![](gifs/curvedseekbar_point_sample.gif)
 
 ## Progress based
-![](gifs/CurvedSeekBar-progress.gif)
+![](gifs/betterseekbar_progress_sample.gif)
+![](gifs/curvedseekbar_progress_sample.gif)

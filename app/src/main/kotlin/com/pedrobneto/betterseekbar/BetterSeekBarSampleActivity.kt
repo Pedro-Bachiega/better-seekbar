@@ -24,8 +24,7 @@ open class BetterSeekBarSampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
 
-//        val totalPoints = 66
-        val totalPoints = 5
+        val totalPoints = 0
 
         val topTextView = findViewById<TextView>(R.id.top_text_view)
         val bottomTextView = findViewById<TextView>(R.id.bottom_text_view)
@@ -38,9 +37,9 @@ open class BetterSeekBarSampleActivity : AppCompatActivity() {
 
         if (totalPoints > 0) {
             seekBar.pointQuantity = totalPoints
-//            seekBar.segmentQuantity = 3
             seekBar.segmentQuantity = 5
             seekBar.setPreferredPointOnClickBySegment(preferredPointBySegment)
+            seekBar.setStartingPoint(preferredPointBySegment[1]!!)
         } else {
             seekBar.setOnProgressUpdatedListener { bottomTextView.text = "Progress: ${it * 100}%" }
             seekBar.setOnProgressStopChangingListener {
@@ -50,10 +49,5 @@ open class BetterSeekBarSampleActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.previous).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected - 1) }
         findViewById<View>(R.id.next).setOnClickListener { seekBar.setSelectedPoint(seekBar.lastPointSelected + 1) }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        seekBar.doOnPreDraw { seekBar.setSelectedPoint(preferredPointBySegment[1]!!) }
     }
 }

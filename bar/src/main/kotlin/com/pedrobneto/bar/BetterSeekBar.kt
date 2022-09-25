@@ -1,6 +1,7 @@
 package com.pedrobneto.bar
 
 import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
@@ -18,20 +19,17 @@ import android.widget.Space
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getIntOrThrow
 import androidx.core.graphics.ColorUtils
-import androidx.core.view.doOnPreDraw
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
+import androidx.core.view.*
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 typealias ProgressListener = (Float) -> Unit
 typealias PointSelectionListener = (Int) -> Unit
 typealias SegmentSelectionListener = (Int) -> Unit
-
-private const val ANIMATION_DURATION = 150L
 
 open class BetterSeekBar : FrameLayout {
 
@@ -205,6 +203,36 @@ open class BetterSeekBar : FrameLayout {
     protected var barColor = Color.YELLOW
 
     /**
+     * Paint to be used on the SeekBar's line.
+     */
+    protected var barPaint = Paint()
+        get() = field.apply {
+            color = barColor
+            style = Paint.Style.STROKE
+            strokeWidth = lineStrokeSize
+        }
+
+    /**
+     * Paint to be used on the SeekBar's line highlight.
+     */
+    protected var lineHighlightPaint = Paint()
+        get() = field.apply {
+            color = ColorUtils.setAlphaComponent(barColor, 100)
+            style = Paint.Style.STROKE
+            strokeWidth = lineStrokeSize * 1.75f
+        }
+
+    /**
+     * Paint to be used on the SeekBar's line highlight.
+     */
+    protected var highlightPaint = Paint()
+        get() = field.apply {
+            color = barColor
+            style = Paint.Style.STROKE
+            strokeWidth = resources.getDimension(R.dimen.default_highlight_stroke_size)
+        }
+
+    /**
      * Color to be used on the SeekBar's points.
      */
     @ColorInt
@@ -275,6 +303,11 @@ open class BetterSeekBar : FrameLayout {
      * If not set, the preferred point will default to the middle of the segment, if possible.
      */
     private var preferredPointBySegment: Map<Int, Int> = mapOf()
+
+    /**
+     * Property to store the desired initial point.
+     */
+    private var desiredStartingPoint: Int = -1
     //endregion
 
     //region Segments
@@ -401,6 +434,11 @@ open class BetterSeekBar : FrameLayout {
                 updatePointSelected(false)
             }
         }
+
+    /**
+     * Property to store progress of the drawing animation.
+     */
+    private var animationProgress: Float = 1f
     //endregion
 
     //region Listeners
@@ -428,6 +466,12 @@ open class BetterSeekBar : FrameLayout {
      * Set the event that will be triggered when a segment is clicked.
      */
     private var onSegmentSelected: SegmentSelectionListener? = null
+    //endregion
+
+    //region Animation
+    protected var drawAnimationDuration: Long = 0L
+    protected var segmentAlphaAnimationDuration: Long = 0L
+    protected var handlerMovementAnimationDuration: Long = 0L
     //endregion
 
     //region Constructors
@@ -499,6 +543,20 @@ open class BetterSeekBar : FrameLayout {
         super.onDraw(canvas)
         fixHandlerY()
         updateSelectedSegment()
+
+        doOnLayout {
+            if (animationsEnabled) {
+                ObjectAnimator.ofFloat(0f, 1f).apply {
+                    duration = drawAnimationDuration
+                    addUpdateListener {
+                        animationProgress = it.animatedValue as Float
+                        graphView.invalidate()
+                    }
+                    start()
+                }
+                if (pointQuantity > 0) setupHandlerInitialPosition()
+            }
+        }
     }
 
     /**
@@ -606,6 +664,21 @@ open class BetterSeekBar : FrameLayout {
                 0
             ) == 0
 
+        drawAnimationDuration = typedArray.getInteger(
+            R.styleable.BetterSeekBar_drawAnimationDuration,
+            resources.getInteger(R.integer.better_seekbar_default_draw_animation_duration)
+        ).toLong()
+
+        handlerMovementAnimationDuration = typedArray.getInteger(
+            R.styleable.BetterSeekBar_handlerMovementAnimationDuration,
+            resources.getInteger(R.integer.better_seekbar_default_handler_animation_duration)
+        ).toLong()
+
+        segmentAlphaAnimationDuration = typedArray.getInteger(
+            R.styleable.BetterSeekBar_segmentAlphaAnimationDuration,
+            resources.getInteger(R.integer.better_seekbar_default_segment_animation_duration)
+        ).toLong()
+
         typedArray.recycle()
     }
 
@@ -670,8 +743,10 @@ open class BetterSeekBar : FrameLayout {
             }
         graphIndicatorView.x = x
 
-        setupPreviousButton()
-        setupNextButton()
+        if (pointQuantity > 0) {
+            setupPreviousButton()
+            setupNextButton()
+        }
     }
 
     /**
@@ -680,7 +755,7 @@ open class BetterSeekBar : FrameLayout {
     private fun setupHandler() {
         val drawable = ContextCompat.getDrawable(context, handlerResource)
         handlerColor?.let { drawable?.setTint(it) }
-        handlerView.id = R.id.curved_seekbar_handler
+        handlerView.id = R.id.better_seekbar_handler
         handlerView.elevation = resources.getDimension(R.dimen.default_handler_elevation)
         handlerView.background = drawable
         handlerView.layoutParams = LayoutParams(handlerSize, handlerSize)
@@ -773,9 +848,16 @@ open class BetterSeekBar : FrameLayout {
      * @see animationsEnabled
      *
      * @param newX The new x coordinate which the handler will be moved to.
+     * @param animated Whether we will animate this change or not.
+     * @param delay Delay until animation starts.
      * @param onEnd Callback that will be executed after the handler's position has changed.
      */
-    private fun adjustHandlerPosition(newX: Float, animated: Boolean, onEnd: () -> Unit = {}) {
+    private fun adjustHandlerPosition(
+        newX: Float,
+        animated: Boolean,
+        delay: Long = 0L,
+        onEnd: () -> Unit = {}
+    ) {
         val x = when {
             newX > maxAchievableX -> maxAchievableX
             newX < minAchievableX -> minAchievableX
@@ -784,7 +866,8 @@ open class BetterSeekBar : FrameLayout {
 
         if (animated) {
             val handlerViewAnimator = handlerView.animate().x(x)
-            handlerViewAnimator.duration = ANIMATION_DURATION
+            handlerViewAnimator.duration = handlerMovementAnimationDuration
+            handlerViewAnimator.startDelay = delay
             handlerViewAnimator.setUpdateListener { effectiveProgress = handlerView.progress }
             handlerViewAnimator.withEndAction {
                 onProgressStopChanging?.invoke(effectiveProgress)
@@ -802,12 +885,19 @@ open class BetterSeekBar : FrameLayout {
         }
     }
 
+    private fun setupHandlerInitialPosition() = adjustHandlerPosition(
+        getXForPoint(desiredStartingPoint),
+        animationsEnabled,
+        drawAnimationDuration - handlerMovementAnimationDuration
+    )
+
     /**
      * Method that will update the handler's y coordinate based on its current x coordinate so that
      * it will stick to the curve.
      */
     protected open fun fixHandlerY() {
-        handlerView.y = measuredHeight / 2f - lineStrokeSize - lineIndicatorStrokeSize
+        handlerView.y = (measuredHeight / 2f) - lineStrokeSize - lineIndicatorStrokeSize
+        if (pointQuantity == 0) handlerView.y -= (handlerView.height / 2f) + (lineStrokeSize / 2f)
     }
 
     /**
@@ -848,7 +938,7 @@ open class BetterSeekBar : FrameLayout {
             if (animationsEnabled && !segmentsAnimating.contains(this)) {
                 animate()
                     .alpha(newAlpha)
-                    .setDuration(ANIMATION_DURATION)
+                    .setDuration(segmentAlphaAnimationDuration)
                     .withEndAction {
                         segmentsAnimating.remove(this)
                         updateSelectedSegment()
@@ -938,22 +1028,36 @@ open class BetterSeekBar : FrameLayout {
     protected open fun getYForProgress(@Suppress("UNUSED_PARAMETER") progress: Float): Float =
         initialY
 
-    /**
-     * Adjusts handler and highlight position as well as the progress to fit the selected point.
-     *
-     * @param point Point to be selected (between 0 and given pointQuantity).
-     */
-    fun setSelectedPoint(point: Int) {
-        if ((point == 0 && pointQuantity != segmentQuantity) || point < 0 || point > pointQuantity) return
+    private fun getXForPoint(point: Int): Float {
+        if ((point == 0 && pointQuantity != segmentQuantity) || point < 0 || point > pointQuantity) {
+            return -1f
+        }
 
-        val newX: Float = when (pointQuantity) {
+        return when (pointQuantity) {
             segmentQuantity -> {
                 val selectedSegment = if (point == 0) segments[0] else segments[point - 1]
                 selectedSegment.x + (selectedSegment.measuredWidth / 2) + handlerMarginEnd
             }
             else -> minAchievableX + (xPerPoint * point)
         }
-        adjustHandlerPosition(newX, animationsEnabled)
+    }
+
+    /**
+     * Adjusts handler and highlight position as well as the progress to fit the selected point.
+     *
+     * @param point Point to be selected (between 0 and given pointQuantity).
+     */
+    fun setSelectedPoint(point: Int) {
+        adjustHandlerPosition(getXForPoint(point), animationsEnabled)
+    }
+
+    /**
+     * Adjusts handler initial position.
+     *
+     * @param point Point to be selected (between 0 and given pointQuantity).
+     */
+    fun setStartingPoint(point: Int) {
+        this.desiredStartingPoint = point
     }
 
     /**
@@ -1051,23 +1155,6 @@ open class BetterSeekBar : FrameLayout {
         }
 
         private fun Canvas.drawBar(handlerX: Float) {
-            val highlightStrokeSize = resources.getDimension(R.dimen.default_highlight_stroke_size)
-
-            val linePaint = Paint()
-            linePaint.color = barColor
-            linePaint.style = Paint.Style.STROKE
-            linePaint.strokeWidth = lineStrokeSize
-
-            val lineHighlightPaint = Paint()
-            lineHighlightPaint.color = ColorUtils.setAlphaComponent(barColor, 100)
-            lineHighlightPaint.style = Paint.Style.STROKE
-            lineHighlightPaint.strokeWidth = lineStrokeSize * 1.75f
-
-            val highlightPaint = Paint()
-            highlightPaint.color = barColor
-            highlightPaint.style = Paint.Style.STROKE
-            highlightPaint.strokeWidth = highlightStrokeSize
-
             val linePath = Path()
             linePath.rewind()
             linePath.moveTo(initialX, initialY)
@@ -1082,8 +1169,9 @@ open class BetterSeekBar : FrameLayout {
             val handlerProgressOnLine = handlerX / finalX
 
             val yTo = initialY + (lineStrokeSize / 2)
+            val limitedFinalX = finalX * animationProgress
 
-            while (x <= finalX) {
+            while (x <= limitedFinalX) {
                 val y = getYForX(x)
                 linePath.lineTo(x, y)
                 lineHighlightPath.lineTo(x, y)
@@ -1122,23 +1210,17 @@ open class BetterSeekBar : FrameLayout {
                 x += 1f
             }
 
-            lineHighlightPath.lineTo(finalX, getYForX(finalX))
+            lineHighlightPath.lineTo(limitedFinalX, getYForX(limitedFinalX))
             if (barGlowEnabled) {
                 drawPath(lineHighlightPath, lineHighlightPaint)
             }
 
-            linePath.lineTo(finalX, getYForX(finalX))
-            drawPath(linePath, linePaint)
+            linePath.lineTo(limitedFinalX, getYForX(limitedFinalX))
+            drawPath(linePath, barPaint)
         }
 
-        private fun Canvas.drawIndicator(handlerX: Float) {
-            val linePaint = Paint()
-            linePaint.color = barIndicatorColor
-            linePaint.style = Paint.Style.STROKE
-            linePaint.strokeWidth = lineIndicatorStrokeSize
-
-            drawLine(handlerX, getYForX(handlerX), handlerX, measuredHeight.toFloat(), linePaint)
-        }
+        private fun Canvas.drawIndicator(handlerX: Float) =
+            drawLine(handlerX, getYForX(handlerX), handlerX, measuredHeight.toFloat(), barPaint)
     }
 
     /**

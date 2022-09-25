@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="better_seekbar_default_draw_animation_duration">1500</integer>
+    <integer name="better_seekbar_default_handler_animation_duration">200</integer>
+    <integer name="better_seekbar_default_segment_animation_duration">200</integer>
+</resources>

@@ -57,6 +57,12 @@
         <!--region Haptic Feedback-->
         <attr name="android:hapticFeedbackEnabled" />
         <!--endregion-->
+
+        <!--region Animation-->
+        <attr name="drawAnimationDuration" format="integer" />
+        <attr name="handlerMovementAnimationDuration" format="integer" />
+        <attr name="segmentAlphaAnimationDuration" format="integer" />
+        <!--endregion-->
     </declare-styleable>
 
     <declare-styleable name="CurvedSeekBar">
