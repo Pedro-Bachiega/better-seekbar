@@ -20,5 +20,9 @@ publications {
         artifactId = "better-seekbar"
         libName = "Better SeekBar"
         libDescription = "A better and customizable version of SeekBar for Android apps"
+
+        artifact sourcesJar
+        artifact javadocJar
+        artifact "$buildDir/outputs/aar/bar-release.aar"
     }
 }

@@ -3,8 +3,6 @@ plugins {
     id 'kotlin-android'
 }
 
-apply from: "$rootDir/tools/publish.gradle"
-
 android {
     namespace 'com.pedrobneto.bar'
 
@@ -32,6 +30,8 @@ android {
     artifacts {
         archives javadocJar, sourcesJar
     }
+
+    apply from: "$rootDir/tools/publish.gradle"
 }
 
 javadoc {
@@ -41,7 +41,7 @@ javadoc {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
 }
