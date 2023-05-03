@@ -5,38 +5,7 @@ plugins {
 
 android {
     namespace 'com.pedrobneto.bar'
-
-    task sourcesJar(type: Jar) {
-        from android.sourceSets.main.java.srcDirs
-        archiveClassifier = 'sources'
-    }
-
-    task javadoc(type: Javadoc) {
-        excludes = ['**/*.kt']
-        source = android.sourceSets.main.java.srcDirs
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-        options.addStringOption('encoding', 'UTF-8')
-    }
-
-    artifacts {
-        archives javadocJar, sourcesJar
-    }
-
     apply from: "$rootDir/tools/publish.gradle"
-}
-
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
 }
 
 dependencies {

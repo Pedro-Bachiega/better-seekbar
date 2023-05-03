@@ -8,11 +8,15 @@ sonatypePublishing {
     repositoryConnectionUrl = "scm:https://github.com/Pedro-Bachiega/better-seekbar.git"
     licenseName = "The Apache License, Version 2.0"
     licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+
     developerId = DEVELOPER_ID
     developerName = DEVELOPER_NAME
     developerEmail = DEVELOPER_EMAIL
+
     username = OSSRH_USERNAME
     password = OSSRH_PASSWORD
+
+    allowedComponents = ['release']
 }
 
 publications {
@@ -20,9 +24,5 @@ publications {
         artifactId = "better-seekbar"
         libName = "Better SeekBar"
         libDescription = "A better and customizable version of SeekBar for Android apps"
-
-        artifact sourcesJar
-        artifact javadocJar
-        artifact "$buildDir/outputs/aar/bar-release.aar"
     }
 }
